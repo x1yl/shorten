@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KZ Links</title>
+    <meta name="theme-color" content="#f5f4ef" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --paper: #f5f4ef;
+        --surface: #ffffff;
+        --ink: #17191f;
+        --ink-soft: #5c6370;
+        --line: #dfddd2;
+        --brand: #0c7a5b;
+        --brand-tint: #e2f1ea;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      body {
+        background-color: var(--paper);
+        background-image: radial-gradient(
+          color-mix(in srgb, var(--line) 75%, transparent) 1px,
+          transparent 1.3px
+        );
+        background-size: 22px 22px;
+        color: var(--ink);
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 15px;
+        min-height: 100vh;
+        margin: 0;
+        -webkit-font-smoothing: antialiased;
+      }
+      .w {
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 48px 20px 80px;
+      }
+      h1 {
+        font-family: "Fraunces", Georgia, serif;
+        font-size: 34px;
+        margin: 0 0 6px;
+        letter-spacing: -0.01em;
+      }
+      p.sub {
+        color: var(--ink-soft);
+        margin: 0 0 28px;
+      }
+      .card {
+        background: var(--surface);
+        border: 1.5px solid var(--ink);
+        border-radius: 12px;
+        padding: 18px;
+        box-shadow: 6px 6px 0 color-mix(in srgb, var(--ink) 12%, transparent);
+      }
+      input {
+        font: inherit;
+        color: var(--ink);
+        background: var(--paper);
+        border: 1.5px solid var(--line);
+        border-radius: 6px;
+        padding: 10px 12px;
+        width: 100%;
+      }
+      input:focus {
+        outline: none;
+        border-color: var(--ink);
+        box-shadow: 2px 2px 0 var(--brand);
+      }
+      button {
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 6px;
+        padding: 10px 16px;
+        border: 1.5px solid var(--ink);
+        background: var(--brand);
+        color: #fff;
+        box-shadow: 3px 3px 0 var(--ink);
+      }
+      button:hover {
+        transform: translate(-1px, -1px);
+        box-shadow: 4px 4px 0 var(--ink);
+      }
+      button:active {
+        transform: translate(1px, 1px);
+        box-shadow: 1px 1px 0 var(--ink);
+      }
+      .row {
+        display: flex;
+        gap: 10px;
+      }
+      .row input {
+        flex: 1;
+      }
+      #out {
+        margin-top: 14px;
+        display: none;
+      }
+      #out .short {
+        font-family: ui-monospace, "SF Mono", Menlo, monospace;
+        font-size: 17px;
+        font-weight: 700;
+        background: var(--brand-tint);
+        border: 1.5px dashed var(--brand);
+        border-radius: 6px;
+        padding: 10px 12px;
+        word-break: break-all;
+      }
+      #out .meta {
+        color: var(--ink-soft);
+        font-size: 12.5px;
+        margin-top: 8px;
+      }
+      #err {
+        display: none;
+        margin-top: 14px;
+        background: #fbe4e0;
+        color: #b3261e;
+        border: 1.5px solid #b3261e;
+        border-radius: 6px;
+        padding: 10px 12px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      h2 {
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--ink-soft);
+        margin: 30px 0 10px;
+      }
+      .hist div {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 8px 0;
+        border-bottom: 1px dashed var(--line);
+        font-size: 13px;
+        align-items: baseline;
+      }
+      .hist a {
+        color: var(--brand);
+        font-weight: 600;
+        font-family: ui-monospace, Menlo, monospace;
+        white-space: nowrap;
+      }
+      .hist span {
+        color: var(--ink-soft);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="w">
+      <h1>🔗 KZ Links</h1>
+      <p class="sub">Short links for share URLs &amp; whatever else. Links expire after 30 days.</p>
+      <div class="card">
+        <div class="row">
+          <input
+            id="u"
+            placeholder="Paste a long URL…"
+            onkeydown="if (event.key === 'Enter') go();"
+          />
+          <button onclick="go()">Shorten</button>
+        </div>
+        <div id="out">
+          <div class="short" id="short"></div>
+          <div class="meta" id="meta"></div>
+        </div>
+        <div id="err"></div>
+      </div>
+      <h2>Recent</h2>
+      <div class="hist" id="hist"></div>
+    </div>
+    <script>
+      const hist = JSON.parse(localStorage.getItem("kzlinks") || "[]");
+      function renderHist() {
+        document.getElementById("hist").innerHTML = hist
+          .map(
+            (h) =>
+              `<div><a href="${h.short}" target="_blank" rel="noopener">${h.short.replace(/^https?:\/\//, "")}</a><span>${h.url}</span></div>`,
+          )
+          .join("");
+      }
+      async function go() {
+        const url = document.getElementById("u").value.trim();
+        const err = document.getElementById("err"),
+          out = document.getElementById("out");
+        err.style.display = "none";
+        out.style.display = "none";
+        if (!/^https?:\/\//i.test(url)) {
+          err.textContent = "URL must start with http:// or https://";
+          err.style.display = "block";
+          return;
+        }
+        try {
+          const r = await fetch("/api/shorten", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url }),
+          });
+          const j = await r.json();
+          if (!r.ok) throw new Error(j.error || "Failed");
+          document.getElementById("short").textContent = j.short;
+          document.getElementById("meta").textContent =
+            "Expires in " + j.expiresInDays + " days · code " + j.code;
+          out.style.display = "block";
+          try {
+            await navigator.clipboard.writeText(j.short);
+            document.getElementById("meta").textContent += " · copied to clipboard";
+          } catch (e) {}
+          hist.unshift({ short: j.short, url });
+          localStorage.setItem("kzlinks", JSON.stringify(hist.slice(0, 20)));
+          renderHist();
+        } catch (e) {
+          err.textContent = String(e.message || e);
+          err.style.display = "block";
+        }
+      }
+      renderHist();
+    </script>
+  </body>
+</html>
