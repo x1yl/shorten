@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>KZ Links</title>
     <meta name="theme-color" content="#f5f4ef" />
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("kz-theme");
+          var d = t
+            ? t === "dark"
+            : matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.dataset.theme = d ? "dark" : "light";
+        } catch (e) {}
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -20,6 +31,32 @@
         --line: #dfddd2;
         --brand: #0c7a5b;
         --brand-tint: #e2f1ea;
+        --danger: #b3261e;
+        --danger-tint: #fbe4e0;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --paper: #0d100f;
+          --surface: #151a18;
+          --ink: #e9ede9;
+          --ink-soft: #b4c0ba;
+          --line: #2b342f;
+          --brand: #41d39a;
+          --brand-tint: #16362b;
+          --danger: #ff8a80;
+          --danger-tint: #3a2320;
+        }
+      }
+      :root[data-theme="dark"] {
+        --paper: #0d100f;
+        --surface: #151a18;
+        --ink: #e9ede9;
+        --ink-soft: #b4c0ba;
+        --line: #2b342f;
+        --brand: #41d39a;
+        --brand-tint: #16362b;
+        --danger: #ff8a80;
+        --danger-tint: #3a2320;
       }
       *,
       *::before,
@@ -39,6 +76,13 @@
         min-height: 100vh;
         margin: 0;
         -webkit-font-smoothing: antialiased;
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease;
+      }
+      ::selection {
+        background: var(--brand);
+        color: #fff;
       }
       .w {
         max-width: 640px;
@@ -61,6 +105,9 @@
         border-radius: 12px;
         padding: 18px;
         box-shadow: 6px 6px 0 color-mix(in srgb, var(--ink) 12%, transparent);
+        transition:
+          background-color 0.2s ease,
+          border-color 0.2s ease;
       }
       input {
         font: inherit;
@@ -86,6 +133,10 @@
         background: var(--brand);
         color: #fff;
         box-shadow: 3px 3px 0 var(--ink);
+        transition:
+          transform 0.12s ease,
+          box-shadow 0.12s ease,
+          background-color 0.2s ease;
       }
       button:hover {
         transform: translate(-1px, -1px);
@@ -111,6 +162,7 @@
         font-size: 17px;
         font-weight: 700;
         background: var(--brand-tint);
+        color: var(--ink);
         border: 1.5px dashed var(--brand);
         border-radius: 6px;
         padding: 10px 12px;
@@ -124,9 +176,9 @@
       #err {
         display: none;
         margin-top: 14px;
-        background: #fbe4e0;
-        color: #b3261e;
-        border: 1.5px solid #b3261e;
+        background: var(--danger-tint);
+        color: var(--danger);
+        border: 1.5px solid var(--danger);
         border-radius: 6px;
         padding: 10px 12px;
         font-size: 13px;
@@ -161,12 +213,57 @@
         text-overflow: ellipsis;
         white-space: nowrap;
       }
+      /* theme toggle */
+      #th {
+        position: fixed;
+        top: 14px;
+        right: 14px;
+        z-index: 10;
+        padding: 8px 10px;
+        background: var(--surface);
+        color: var(--ink);
+      }
     </style>
   </head>
   <body>
+    <button id="th" aria-label="Toggle theme">
+      <svg
+        id="ic-moon"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+      </svg>
+      <svg
+        id="ic-sun"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        style="display: none"
+      >
+        <circle cx="12" cy="12" r="4" />
+        <path
+          d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+        />
+      </svg>
+    </button>
     <div class="w">
       <h1>🔗 KZ Links</h1>
-      <p class="sub">Short links for share URLs &amp; whatever else. Links expire after 30 days.</p>
+      <p class="sub">
+        Short links for share URLs &amp; whatever else. Links expire after 30
+        days.
+      </p>
       <div class="card">
         <div class="row">
           <input
@@ -186,6 +283,25 @@
       <div class="hist" id="hist"></div>
     </div>
     <script>
+      const th = document.getElementById("th");
+      function paintTh() {
+        const dark = document.documentElement.dataset.theme === "dark";
+        document.getElementById("ic-moon").style.display = dark
+          ? "none"
+          : "block";
+        document.getElementById("ic-sun").style.display = dark
+          ? "block"
+          : "none";
+      }
+      th.onclick = () => {
+        const next =
+          document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        document.documentElement.dataset.theme = next;
+        localStorage.setItem("kz-theme", next);
+        paintTh();
+      };
+      paintTh();
+
       const hist = JSON.parse(localStorage.getItem("kzlinks") || "[]");
       function renderHist() {
         document.getElementById("hist").innerHTML = hist
@@ -220,7 +336,8 @@
           out.style.display = "block";
           try {
             await navigator.clipboard.writeText(j.short);
-            document.getElementById("meta").textContent += " · copied to clipboard";
+            document.getElementById("meta").textContent +=
+              " · copied to clipboard";
           } catch (e) {}
           hist.unshift({ short: j.short, url });
           localStorage.setItem("kzlinks", JSON.stringify(hist.slice(0, 20)));
