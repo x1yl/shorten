@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">KZ Links</title>
+  <desc id="description">Create short, shareable links that expire after 30 days.</desc>
+  <rect width="1200" height="630" fill="#f5f4ef"/>
+  <path d="M0 0h1200v630H0z" fill="url(#dots)" opacity=".5"/>
+  <rect x="92" y="92" width="1016" height="446" rx="20" fill="#fff" stroke="#17191f" stroke-width="4"/>
+  <rect x="112" y="112" width="976" height="406" rx="12" fill="none" stroke="#0c7a5b" stroke-width="2" opacity=".35"/>
+  <g transform="translate(154 164)" fill="none" stroke="#0c7a5b" stroke-linecap="round" stroke-linejoin="round" stroke-width="18">
+    <path d="m76 41 30-30c25-25 65-25 90 0s25 65 0 90l-61 61c-25 25-65 25-90 0"/>
+    <path d="m164 129-30 30c-25 25-65 25-90 0s-25-65 0-90l61-61c25-25 65-25 90 0"/>
+  </g>
+  <text x="154" y="370" fill="#17191f" font-family="Georgia, serif" font-size="86" font-weight="700">KZ Links</text>
+  <text x="158" y="438" fill="#5c6370" font-family="Arial, sans-serif" font-size="30">Short, shareable links for everyone.</text>
+  <rect x="884" y="434" width="154" height="50" rx="8" fill="#e2f1ea"/>
+  <text x="961" y="468" text-anchor="middle" fill="#0c7a5b" font-family="Arial, sans-serif" font-size="22" font-weight="700">30 DAY TTL</text>
+  <defs>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1.2" fill="#dfddd2"/>
+    </pattern>
+  </defs>
+</svg>

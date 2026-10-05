@@ -4,226 +4,46 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>KZ Links</title>
+    <meta
+      name="description"
+      content="Create short, shareable links that expire after 30 days."
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://links.kevinzheng.fyi/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://links.kevinzheng.fyi/" />
+    <meta property="og:title" content="KZ Links" />
+    <meta
+      property="og:description"
+      content="Create short, shareable links that expire after 30 days."
+    />
+    <meta
+      property="og:image"
+      content="https://links.kevinzheng.fyi/icon.png"
+    />
+    <meta property="og:image:alt" content="KZ Links short link generator" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="KZ Links" />
+    <meta
+      name="twitter:description"
+      content="Create short, shareable links that expire after 30 days."
+    />
+    <meta
+      name="twitter:image"
+      content="https://links.kevinzheng.fyi/og-image.svg"
+    />
+    <meta name="twitter:image:alt" content="KZ Links short link generator" />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icon.png" />
     <meta name="theme-color" content="#f5f4ef" />
-    <script>
-      (function () {
-        try {
-          var t = localStorage.getItem("kz-theme");
-          var d = t
-            ? t === "dark"
-            : matchMedia("(prefers-color-scheme: dark)").matches;
-          document.documentElement.dataset.theme = d ? "dark" : "light";
-        } catch (e) {}
-      })();
-    </script>
+    <script src="./index.js" type="module"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <style>
-      :root {
-        --paper: #f5f4ef;
-        --surface: #ffffff;
-        --ink: #17191f;
-        --ink-soft: #5c6370;
-        --line: #dfddd2;
-        --brand: #0c7a5b;
-        --brand-tint: #e2f1ea;
-        --danger: #b3261e;
-        --danger-tint: #fbe4e0;
-      }
-      @media (prefers-color-scheme: dark) {
-        :root:not([data-theme="light"]) {
-          --paper: #0d100f;
-          --surface: #151a18;
-          --ink: #e9ede9;
-          --ink-soft: #b4c0ba;
-          --line: #2b342f;
-          --brand: #41d39a;
-          --brand-tint: #16362b;
-          --danger: #ff8a80;
-          --danger-tint: #3a2320;
-        }
-      }
-      :root[data-theme="dark"] {
-        --paper: #0d100f;
-        --surface: #151a18;
-        --ink: #e9ede9;
-        --ink-soft: #b4c0ba;
-        --line: #2b342f;
-        --brand: #41d39a;
-        --brand-tint: #16362b;
-        --danger: #ff8a80;
-        --danger-tint: #3a2320;
-      }
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-      }
-      body {
-        background-color: var(--paper);
-        background-image: radial-gradient(
-          color-mix(in srgb, var(--line) 75%, transparent) 1px,
-          transparent 1.3px
-        );
-        background-size: 22px 22px;
-        color: var(--ink);
-        font-family: "Inter", system-ui, sans-serif;
-        font-size: 15px;
-        min-height: 100vh;
-        margin: 0;
-        -webkit-font-smoothing: antialiased;
-        transition:
-          background-color 0.2s ease,
-          color 0.2s ease;
-      }
-      ::selection {
-        background: var(--brand);
-        color: #fff;
-      }
-      .w {
-        max-width: 640px;
-        margin: 0 auto;
-        padding: 48px 20px 80px;
-      }
-      h1 {
-        font-family: "Fraunces", Georgia, serif;
-        font-size: 34px;
-        margin: 0 0 6px;
-        letter-spacing: -0.01em;
-      }
-      p.sub {
-        color: var(--ink-soft);
-        margin: 0 0 28px;
-      }
-      .card {
-        background: var(--surface);
-        border: 1.5px solid var(--ink);
-        border-radius: 12px;
-        padding: 18px;
-        box-shadow: 6px 6px 0 color-mix(in srgb, var(--ink) 12%, transparent);
-        transition:
-          background-color 0.2s ease,
-          border-color 0.2s ease;
-      }
-      input {
-        font: inherit;
-        color: var(--ink);
-        background: var(--paper);
-        border: 1.5px solid var(--line);
-        border-radius: 6px;
-        padding: 10px 12px;
-        width: 100%;
-      }
-      input:focus {
-        outline: none;
-        border-color: var(--ink);
-        box-shadow: 2px 2px 0 var(--brand);
-      }
-      button {
-        font: inherit;
-        font-weight: 600;
-        cursor: pointer;
-        border-radius: 6px;
-        padding: 10px 16px;
-        border: 1.5px solid var(--ink);
-        background: var(--brand);
-        color: #fff;
-        box-shadow: 3px 3px 0 var(--ink);
-        transition:
-          transform 0.12s ease,
-          box-shadow 0.12s ease,
-          background-color 0.2s ease;
-      }
-      button:hover {
-        transform: translate(-1px, -1px);
-        box-shadow: 4px 4px 0 var(--ink);
-      }
-      button:active {
-        transform: translate(1px, 1px);
-        box-shadow: 1px 1px 0 var(--ink);
-      }
-      .row {
-        display: flex;
-        gap: 10px;
-      }
-      .row input {
-        flex: 1;
-      }
-      #out {
-        margin-top: 14px;
-        display: none;
-      }
-      #out .short {
-        font-family: ui-monospace, "SF Mono", Menlo, monospace;
-        font-size: 17px;
-        font-weight: 700;
-        background: var(--brand-tint);
-        color: var(--ink);
-        border: 1.5px dashed var(--brand);
-        border-radius: 6px;
-        padding: 10px 12px;
-        word-break: break-all;
-      }
-      #out .meta {
-        color: var(--ink-soft);
-        font-size: 12.5px;
-        margin-top: 8px;
-      }
-      #err {
-        display: none;
-        margin-top: 14px;
-        background: var(--danger-tint);
-        color: var(--danger);
-        border: 1.5px solid var(--danger);
-        border-radius: 6px;
-        padding: 10px 12px;
-        font-size: 13px;
-        font-weight: 600;
-      }
-      h2 {
-        font-size: 11px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.14em;
-        color: var(--ink-soft);
-        margin: 30px 0 10px;
-      }
-      .hist div {
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
-        padding: 8px 0;
-        border-bottom: 1px dashed var(--line);
-        font-size: 13px;
-        align-items: baseline;
-      }
-      .hist a {
-        color: var(--brand);
-        font-weight: 600;
-        font-family: ui-monospace, Menlo, monospace;
-        white-space: nowrap;
-      }
-      .hist span {
-        color: var(--ink-soft);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      /* theme toggle */
-      #th {
-        position: fixed;
-        top: 14px;
-        right: 14px;
-        z-index: 10;
-        padding: 8px 10px;
-        background: var(--surface);
-        color: var(--ink);
-      }
-    </style>
+    <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
     <button id="th" aria-label="Toggle theme">
@@ -282,72 +102,5 @@
       <h2>Recent</h2>
       <div class="hist" id="hist"></div>
     </div>
-    <script>
-      const th = document.getElementById("th");
-      function paintTh() {
-        const dark = document.documentElement.dataset.theme === "dark";
-        document.getElementById("ic-moon").style.display = dark
-          ? "none"
-          : "block";
-        document.getElementById("ic-sun").style.display = dark
-          ? "block"
-          : "none";
-      }
-      th.onclick = () => {
-        const next =
-          document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-        document.documentElement.dataset.theme = next;
-        localStorage.setItem("kz-theme", next);
-        paintTh();
-      };
-      paintTh();
-
-      const hist = JSON.parse(localStorage.getItem("kzlinks") || "[]");
-      function renderHist() {
-        document.getElementById("hist").innerHTML = hist
-          .map(
-            (h) =>
-              `<div><a href="${h.short}" target="_blank" rel="noopener">${h.short.replace(/^https?:\/\//, "")}</a><span>${h.url}</span></div>`,
-          )
-          .join("");
-      }
-      async function go() {
-        const url = document.getElementById("u").value.trim();
-        const err = document.getElementById("err"),
-          out = document.getElementById("out");
-        err.style.display = "none";
-        out.style.display = "none";
-        if (!/^https?:\/\//i.test(url)) {
-          err.textContent = "URL must start with http:// or https://";
-          err.style.display = "block";
-          return;
-        }
-        try {
-          const r = await fetch("/api/shorten", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ url }),
-          });
-          const j = await r.json();
-          if (!r.ok) throw new Error(j.error || "Failed");
-          document.getElementById("short").textContent = j.short;
-          document.getElementById("meta").textContent =
-            "Expires in " + j.expiresInDays + " days · code " + j.code;
-          out.style.display = "block";
-          try {
-            await navigator.clipboard.writeText(j.short);
-            document.getElementById("meta").textContent +=
-              " · copied to clipboard";
-          } catch (e) {}
-          hist.unshift({ short: j.short, url });
-          localStorage.setItem("kzlinks", JSON.stringify(hist.slice(0, 20)));
-          renderHist();
-        } catch (e) {
-          err.textContent = String(e.message || e);
-          err.style.display = "block";
-        }
-      }
-      renderHist();
-    </script>
   </body>
 </html>
